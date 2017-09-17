@@ -111,6 +111,22 @@
 
 
 
+    $change_password_parameters = array('email','password');
+    $change_password_rule = array(
+        array(
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'trim|required|valid_email'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'Password',
+            'rules' => 'trim|required'
+        )
+    );
+
+
+
 
     $arr= array('signup_parameters'=>$signup_parameters,
                 'signup_rule'=>$signup_rule,

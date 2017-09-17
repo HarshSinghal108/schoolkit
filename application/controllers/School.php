@@ -39,7 +39,7 @@ Class School extends CI_CONTROLLER {
         $where = array('school_email' => $input['email']);
         $data = $this->sm->get_school($where);
         if (sizeof($data)>0){
-            $this->send_response(false, 'Email Already Exist');
+            $this->send_response(false, 'Email_Already_Exist');
         }
         else{
             $time=time();
@@ -55,7 +55,7 @@ Class School extends CI_CONTROLLER {
                 
             }
             else{
-                $this->send_response(false, 'Please Try Later');    
+                $this->send_response(false, 'Please_Try_Later');    
             }
 
         }            
@@ -65,7 +65,6 @@ Class School extends CI_CONTROLLER {
 
     public function login()
     {
-
         $this->validate($this->input_arr['login_rule'], $this->input_arr['login_parameters'], true);
         $input = $this->get_input($this->input_arr['login_parameters']);
                 
@@ -73,49 +72,35 @@ Class School extends CI_CONTROLLER {
         $data = $this->sm->get_school($where);
         if (sizeof($data)>0)
         {
-            if($data[0]['user_is_verified'] == 0){
-                $this->send_response(false, 'Your account is not activated. Please go to your email and click activation link');
-            }
-           // create the session
-            $this->set_user_session('user', $data[0]['user_id']);               
-            $this->send_response(true, 'Success','',$data[0]['user_name']);
+            $this->set_school_session('school', $data[0]['school_id']);               
+            $this->send_response(true, 'Success','','');
         }
         else 
         {
-            $this->send_response(false, 'Invalid Email Or Password');
+            $this->send_response(false, 'Invalid_Email_Or_Password');
         }   
     }
 
-    public function is_logged_in()
+    public function is_school_logged_in()
     {   
-        if(!$this->session->userdata('user_id'))
+        if(!$this->session->userdata('school_id'))
         {
-            $this->send_response(false, 'Invalid Login');
+            $this->send_response(false, 'Invalid_Login');
         }
-        $user_id = $this->session->userdata('user_id');
-        $where = array('user_id' => $user_id);
-        $data = $this->mm->get_user($where);
-        if (sizeof($data)>0)
-            $flag = 1;
-            if($data[0]['user_company_name'] == ''){
-                $flag =  0;   
-            }
-            $this->send_response(true,'Success','',$flag);
+        $this->send_response(true,'Success','','');
     }
 
-    public function logout()
+    public function school_logout()
     { 
-        
-        //destroy session
         $this->session->sess_destroy();
         $this->send_response(true,"Success");
     }
     
 
-    public function set_user_session($user_role, $id)
+    public function set_school_session($user_role, $id)
      {
         //set seesion varribles 
-        $this->session->set_userdata(array('user_logged_in' => '1', 'role' => $user_role, 'user_id' => $id));
+        $this->session->set_userdata(array('user_logged_in' => '1', 'role' => $user_role, 'school_id' => $id));
      }
 
 

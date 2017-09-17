@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Sep 06, 2017 at 01:20 AM
+-- Generation Time: Sep 14, 2017 at 12:31 PM
 -- Server version: 5.6.35-1+deb.sury.org~precise+0.1
 -- PHP Version: 5.5.37-1+deprecated+dontuse+deb.sury.org~precise+1
 
@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `package` (
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `package_school_id` int(11) NOT NULL,
   `package_number_of_student` int(11) NOT NULL,
+  `package_number_of_months` int(11) NOT NULL,
   `package_charge` int(11) NOT NULL,
   `package_total_charge` int(11) NOT NULL,
   `package_start_date` int(11) NOT NULL,
@@ -150,7 +151,14 @@ CREATE TABLE IF NOT EXISTS `package` (
   `package_updated_on` int(11) NOT NULL,
   `package_created_on` int(11) NOT NULL,
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `package`
+--
+
+INSERT INTO `package` (`package_id`, `package_school_id`, `package_number_of_student`, `package_number_of_months`, `package_charge`, `package_total_charge`, `package_start_date`, `package_end_date`, `package_updated_on`, `package_created_on`) VALUES
+(2, 4, 10, 12, 240, 28800, 0, 0, 1505372472, 1505372472);
 
 -- --------------------------------------------------------
 
@@ -213,11 +221,18 @@ CREATE TABLE IF NOT EXISTS `school` (
   `school_referal_admin_id` int(11) DEFAULT NULL,
   `school_active_status` int(11) NOT NULL DEFAULT '0',
   `school_registration_status` int(11) NOT NULL DEFAULT '0',
-  `school_added_time` int(11) NOT NULL,
-  `school_update_time` int(11) NOT NULL,
+  `school_created_on` int(11) NOT NULL,
+  `school_updated_on` int(11) NOT NULL,
   `school_pincode` int(11) NOT NULL,
   PRIMARY KEY (`school_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `school`
+--
+
+INSERT INTO `school` (`school_id`, `school_name`, `school_email`, `school_mobile1`, `school_mobile2`, `school_address`, `school_landmark`, `school_city`, `school_state`, `school_country`, `school_password`, `school_secret_key`, `school_otp`, `school_referal_admin_id`, `school_active_status`, `school_registration_status`, `school_created_on`, `school_updated_on`, `school_pincode`) VALUES
+(4, 'TT', 'singhal.harsh1994@gmail.com', 909090, 79798, 'hhyhlk', 'mh,hk', 'hkhkk', 'jlj', 'hkhkh', 'e10adc3949ba59abbe56e057f20f883e', '12345', NULL, 1, 0, 0, 1505372472, 1505372472, 8989);
 
 -- --------------------------------------------------------
 
@@ -238,7 +253,10 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('95cc557e9ec59803971846dd9bc7af5ff6aecc71', '::1', 1504640992, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343634303939323b);
+('95cc557e9ec59803971846dd9bc7af5ff6aecc71', '::1', 1504640992, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343634303939323b),
+('aa11475d54bf545f7705d5c5ee3cf19902497156', '::1', 1504896770, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343839363737303b),
+('e74f38115504b2e43185c4666c0a2d587c3f5e70', '::1', 1505367986, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353336333936323b),
+('b5ffec8aeb2738ec76f6a22642907ba8bb67f0c8', '::1', 1505372472, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353337323437323b);
 
 -- --------------------------------------------------------
 
