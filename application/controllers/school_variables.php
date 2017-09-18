@@ -1,6 +1,6 @@
 <?php
 
-     $signup_parameters = array('email','password','confirm_password','mobile1','name','mobile2','address','landmark','city','pincode','state','country','secret_key','referal_admin_id','package','nom','amount','nos');
+     $signup_parameters = array('email','password','confirm_password','mobile1','name','mobile2','address','landmark','city','pincode','state','country','secret_key','referal_admin_id','nom','amount','nos');
      $signup_rule = array(
         array(
             'field' => 'name',
@@ -70,11 +70,6 @@
         array(
             'field' => 'nos',
             'label' => 'Number of Students',
-            'rules' => 'trim|required'
-        ),
-        array(
-            'field' => 'package',
-            'label' => 'Package',
             'rules' => 'trim|required'
         ),
         array(
