@@ -81,19 +81,6 @@ $db['default'] = array(
 	'username' => 'root',
 	'password' => 'ram',
 	'database' => 'schoolkit',
-
-
-	// 'hostname' => 'localhost',
-	// 'username' => 'steelstore',
-	// 'password' => 'root@123',
-	// 'database' => 'onlinesteel',
-
-// 	$db['default']['hostname'] = 'localhost';
-// $db['default']['username'] = 'id599112_root';
-// $db['default']['password'] = '123456789';
-// $db['default']['database'] = 'id599112_gfs';
-
-
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

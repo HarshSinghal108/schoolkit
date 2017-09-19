@@ -31,6 +31,15 @@ class School_model extends CI_MODEL{
         return false;
     }
 
+     public function update_school($data,$where){
+         $this->db->where($where);
+        $query = $this->db->update($this->school_table_name,$data);
+        if($this->db->affected_rows()==1){
+            return $query;
+        }
+        return false;
+    }
+
     public function insert_school_package($data){
         $query = $this->db->insert($this->package_table_name,$data);
         if($this->db->affected_rows()==1){
