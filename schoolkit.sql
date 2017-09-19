@@ -2,10 +2,10 @@
 -- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:3306
--- Generation Time: Sep 14, 2017 at 12:31 PM
--- Server version: 5.6.35-1+deb.sury.org~precise+0.1
--- PHP Version: 5.5.37-1+deprecated+dontuse+deb.sury.org~precise+1
+-- Host: localhost
+-- Generation Time: Sep 19, 2017 at 03:48 PM
+-- Server version: 5.5.55-0ubuntu0.14.04.1
+-- PHP Version: 5.5.9-1ubuntu4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -143,22 +143,27 @@ CREATE TABLE IF NOT EXISTS `package` (
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `package_school_id` int(11) NOT NULL,
   `package_number_of_student` int(11) NOT NULL,
-  `package_number_of_months` int(11) NOT NULL,
   `package_charge` int(11) NOT NULL,
   `package_total_charge` int(11) NOT NULL,
   `package_start_date` int(11) NOT NULL,
   `package_end_date` int(11) NOT NULL,
   `package_updated_on` int(11) NOT NULL,
   `package_created_on` int(11) NOT NULL,
+  `package_number_of_months` int(11) NOT NULL,
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `package`
 --
 
-INSERT INTO `package` (`package_id`, `package_school_id`, `package_number_of_student`, `package_number_of_months`, `package_charge`, `package_total_charge`, `package_start_date`, `package_end_date`, `package_updated_on`, `package_created_on`) VALUES
-(2, 4, 10, 12, 240, 28800, 0, 0, 1505372472, 1505372472);
+INSERT INTO `package` (`package_id`, `package_school_id`, `package_number_of_student`, `package_charge`, `package_total_charge`, `package_start_date`, `package_end_date`, `package_updated_on`, `package_created_on`, `package_number_of_months`) VALUES
+(1, 2, 121, 1222, 17891302, 0, 0, 1505556023, 1505556023, 121),
+(2, 3, 11, 11, 1331, 0, 0, 1505556465, 1505556465, 11),
+(3, 4, 11, 11, 1331, 0, 0, 1505556512, 1505556512, 11),
+(4, 5, 3, 1, 6, 0, 0, 1505556572, 1505556572, 2),
+(5, 6, 12, 121, 17424, 0, 0, 1505556713, 1505556713, 12),
+(6, 1, 100, 10, 12000, 0, 0, 1505707347, 1505707347, 12);
 
 -- --------------------------------------------------------
 
@@ -225,14 +230,14 @@ CREATE TABLE IF NOT EXISTS `school` (
   `school_updated_on` int(11) NOT NULL,
   `school_pincode` int(11) NOT NULL,
   PRIMARY KEY (`school_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `school`
 --
 
 INSERT INTO `school` (`school_id`, `school_name`, `school_email`, `school_mobile1`, `school_mobile2`, `school_address`, `school_landmark`, `school_city`, `school_state`, `school_country`, `school_password`, `school_secret_key`, `school_otp`, `school_referal_admin_id`, `school_active_status`, `school_registration_status`, `school_created_on`, `school_updated_on`, `school_pincode`) VALUES
-(4, 'TT', 'singhal.harsh1994@gmail.com', 909090, 79798, 'hhyhlk', 'mh,hk', 'hkhkk', 'jlj', 'hkhkh', 'e10adc3949ba59abbe56e057f20f883e', '12345', NULL, 1, 0, 0, 1505372472, 1505372472, 8989);
+(1, 'KV Deoria', 'prateek3693@gmail.com', 9568997343, 9568997343, 'b22 infocity 1, sec 34 gurgaon', 'jail road', 'deoria', 'Uttar Pradesh', 'India', '81dc9bdb52d04dc20036dbd8313ed055', 'abc', 4516, 123, 0, 0, 1505707347, 1505707347, 274001);
 
 -- --------------------------------------------------------
 
@@ -254,9 +259,11 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 INSERT INTO `sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('95cc557e9ec59803971846dd9bc7af5ff6aecc71', '::1', 1504640992, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343634303939323b),
-('aa11475d54bf545f7705d5c5ee3cf19902497156', '::1', 1504896770, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343839363737303b),
-('e74f38115504b2e43185c4666c0a2d587c3f5e70', '::1', 1505367986, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353336333936323b),
-('b5ffec8aeb2738ec76f6a22642907ba8bb67f0c8', '::1', 1505372472, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353337323437323b);
+('3ec059ea085771ca6bfe3e62cc56d8cfacba6747', '::1', 1505556967, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353535353330333b),
+('2344d0b32c4ecea9ccae87fbac5cb81da4126382', '::1', 1505713449, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353730363834333b757365725f6c6f676765645f696e7c733a313a2231223b726f6c657c733a363a227363686f6f6c223b7363686f6f6c5f69647c733a313a2231223b),
+('e192a5a5a5d2fa9dfb124fa7c64f332e47534404', '::1', 1505716723, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353731363732333b),
+('5f0d5b7defd12e594a34dad7a4975eb8fc20ea5f', '127.0.0.1', 1505805397, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353830313639303b),
+('3f380403d6e1fdc96f8d9186aecff4cac1192bb9', '::1', 1505813539, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353831323637383b);
 
 -- --------------------------------------------------------
 
