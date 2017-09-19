@@ -109,14 +109,47 @@
         )
     );
 
-
-
-    $change_password_parameters = array('email','password');
-    $change_password_rule = array(
+    $add_teacher_parameters = array('email','password','mobile','name','address','city','pincode','state','country');
+    $add_teacher_rule = array(
+        array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'trim|required'
+        ),
         array(
             'field' => 'email',
             'label' => 'Email',
             'rules' => 'trim|required|valid_email'
+        ),
+        array(
+            'field' => 'mobile',
+            'label' => 'Mobile',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'address',
+            'label' => 'Address',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'city',
+            'label' => 'City',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'pincode',
+            'label' => 'Pincode',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'state',
+            'label' => 'State',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'country',
+            'label' => 'Country',
+            'rules' => 'trim|required'
         ),
         array(
             'field' => 'password',
@@ -126,13 +159,97 @@
     );
 
 
+    $edit_teacher_parameters = array('teacher_id','email','password','mobile','name','address','city','pincode','state','country');
+    $edit_teacher_rule = array(
+        array(
+            'field' => 'teacher_id',
+            'label' => 'Teacher Id',
+            'rules' => 'trim|required'
+        ),array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'email',
+            'label' => 'Email',
+            'rules' => 'trim|required|valid_email'
+        ),
+        array(
+            'field' => 'mobile',
+            'label' => 'Mobile',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'address',
+            'label' => 'Address',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'city',
+            'label' => 'City',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'pincode',
+            'label' => 'Pincode',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'state',
+            'label' => 'State',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'country',
+            'label' => 'Country',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'password',
+            'label' => 'Password',
+            'rules' => 'trim|required'
+        )
+    );
 
 
-    $arr= array('signup_parameters'=>$signup_parameters,
+    $delete_teacher_parameters = array('teacher_id');
+    $delete_teacher_rule = array(
+        array(
+            'field' => 'teacher_id',
+            'label' => 'Teacher Id',
+            'rules' => 'trim|required'
+        )
+    );
+
+
+    // $change_password_parameters = array('email','password');
+    // $change_password_rule = array(
+    //     array(
+    //         'field' => 'email',
+    //         'label' => 'Email',
+    //         'rules' => 'trim|required|valid_email'
+    //     ),
+    //     array(
+    //         'field' => 'password',
+    //         'label' => 'Password',
+    //         'rules' => 'trim|required'
+    //     )
+    // );
+
+
+
+
+    $arr = array('signup_parameters'=>$signup_parameters,
                 'signup_rule'=>$signup_rule,
                 'login_parameters'=>$login_parameters,
                 'login_rule'=>$login_rule,
-                
+                'add_teacher_parameters'=>$add_teacher_parameters,
+                'add_teacher_rule'=>$add_teacher_rule,
+                'edit_teacher_parameters'=>$edit_teacher_parameters,
+                'edit_teacher_rule'=>$edit_teacher_rule,
+                'delete_teacher_parameters'=>$delete_teacher_parameters,
+                'delete_teacher_rule'=>$delete_teacher_rule,
             );
         return $arr;
     

@@ -73,7 +73,7 @@ Class School extends CI_CONTROLLER {
         if (sizeof($data)>0)
         {
             $this->set_school_session('school', $data[0]['school_id']);               
-            $this->send_response(true, 'Success','','');
+            $this->send_response(true, 'Success','',$data[0]['school_id']);
         }
         else 
         {
@@ -87,7 +87,9 @@ Class School extends CI_CONTROLLER {
         {
             $this->send_response(false, 'Invalid_Login');
         }
-        $this->send_response(true,'Success','','');
+        $school_id=$this->session->userdata('school_id');
+
+        $this->send_response(true,'Success','',$school_id);
     }
 
     public function school_logout()
@@ -104,10 +106,113 @@ Class School extends CI_CONTROLLER {
      }
 
 
+    public function add_teacher()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+        $this->validate($this->input_arr['add_teacher_rule'], $this->input_arr['add_teacher_parameters'], true);
+        $input = $this->get_input($this->input_arr['add_teacher_parameters']);
+        
+        $where = array('teacher_email' => $input['email']);
+        $data = $this->sm->get_teacher($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Email_Already_Exist');
+        }
+        else{
+            $time=time();
+            $teacher_data=array('teacher_school_id'=>$school_id,'teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>md5($input['password']),'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_created_on'=>$time,'teacher_updated_on'=>$time);
+            $id = $this->sm->insert_teacher($teacher_data);
+            if($id){
+                $this->send_response(true,"Success",'',$id);
+                
+            }
+            else{
+                $this->send_response(false, 'Please_Try_Later');    
+            }
+        }
+    }
+
+
+    public function edit_teacher()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+        $this->validate($this->input_arr['edit_teacher_rule'], $this->input_arr['edit_teacher_parameters'], true);
+        $input = $this->get_input($this->input_arr['edit_teacher_parameters']);
+        
+        
+        $where = array('teacher_id'=>$input['teacher_id']);
+        $data = $this->sm->get_teacher($where);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+
+        $time=time();
+        $teacher_data=array('teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>md5($input['password']),'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_updated_on'=>$time);
+        $id = $this->sm->update_teacher($where,$teacher_data);
+        if($id){
+            $this->send_response(true,"Success",'',$id);
+            
+        }
+        else{
+            $this->send_response(false, 'Please_Try_Later');    
+        }
     
+    }
 
 
+    public function list_teachers()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id'); 
 
+        $where = array('teacher_school_id'=>$school_id);
+        $select = 'teacher_id as id,teacher_name as name,teacher_email as email,teacher_mobile as mobile,teacher_address as address,teacher_city as city,teacher_state as state,teacher_country as country,teacher_pincode as pincode,teacher_created_on added_time';
+        $data = $this->sm->get_teacher($where,$select);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        else{
+            $this->send_response(false,'Teacher_List','',$data);    
+        }
+    
+    }
+
+
+    public function delete_teacher()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+
+        $this->validate($this->input_arr['delete_teacher_rule'], $this->input_arr['delete_teacher_parameters'], true);
+        $input = $this->get_input($this->input_arr['delete_teacher_parameters']);
+
+        $where = array('teacher_id'=>$input['teacher_id']);
+        $data = $this->sm->get_teacher($where);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        
+        $this->sm->delete_teacher($where);    
+        $this->send_response(true,"Success",'','');
+            
+        
+    }
 
 
   //   public function change_password(){
