@@ -246,8 +246,8 @@
     $forget_password_rule = array(
         array(
             'field' => 'email',
-            'label' => 'Email',
-            'rules' => 'trim|required|valid_email'
+            'label' => 'Email/Mobile',
+            'rules' => 'trim|required'
             )
         );    
 
