@@ -85,9 +85,9 @@ Class School extends CI_CONTROLLER {
     {   
         if(!$this->session->userdata('school_id'))
         {
-            $this->send_response(false, 'Invalid_Login');
+            $this->send_response(true, 'Invalid_Login');
         }
-        $this->send_response(true,'Success','','');
+        $this->send_response(true,'Success','',$this->session->userdata('school_id'));
     }
 
     public function school_logout()
@@ -248,10 +248,9 @@ Class School extends CI_CONTROLLER {
         foreach ($dataposted as $value) {
             if (form_error($value) != "") {
                 $errorarray[$value] = form_error($value);
+                return $errorarray[$value];
             }
         }
-
-        return $errorarray;
     }
 
     public function get_input($inputdata) 
