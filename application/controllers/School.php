@@ -351,8 +351,6 @@ function validate_email($email) {
         $this->email->subject($subject);
         $this->email->message($message);
         $is_mailed = $this->email->send();
-        echo $is_mailed;
-        die;
         if ($is_mailed) 
         {
             return 1;
