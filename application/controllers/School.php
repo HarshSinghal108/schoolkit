@@ -104,7 +104,46 @@ Class School extends CI_CONTROLLER {
      }
 
 
-    
+    public function forget_password(){
+        $this->validate($this->input_arr['forget_password_rule'], $this->input_arr['forget_password_parameters'], true);
+        $input = $this->get_input($this->input_arr['forget_password_parameters']);
+        $email = $input['email'];
+        $where = '(school_email="'.$email.'" OR school_mobile1="'.$email.'" OR school_mobile2="'.$email.'")';
+        $select = array('school_email','school_name');
+        $data = $this->sm->get_school($where,$select);
+        if (sizeof($data)==0)
+        {
+            $this->send_response(false,$email." Not found in our Server");
+        }
+        $to = $data[0]['school_email'];
+        $otp = rand(999,9999);
+        $subject = "School Kit App | Forget Password OTP";
+        $msg = "Hi! ".$data[0]['school_name']."Your OTP for Email or Mobile :".$email." is ".$otp;
+        $update_data = array('school_otp'=>$otp);
+        $this->sm->update_school($update_data,$where);
+        $this->mailtouser($to,$subject,$msg);
+        $this->send_response(true,"Success");
+    }
+
+
+    public function check_otp(){
+        $this->validate($this->input_arr['check_otp_rule'], $this->input_arr['check_otp_parameters'], true);
+        $input = $this->get_input($this->input_arr['check_otp_parameters']);
+        $email = $input['email'];
+        $otp = $input['otp'];
+        $password = $input['password'];
+        $confirm_password = $input['confirm_password'];
+        $where = '((school_email="'.$email.'" OR school_mobile1="'.$email.'" OR school_mobile2="'.$email.'") AND school_otp="'.$otp.'" )';
+        $data = $this->sm->get_school($where);
+        if (sizeof($data)==0)
+        {
+            $this->send_response(false,$otp." OTP is Wrong for Email or Mobile: ".$email);
+        }
+        $update_data = array('school_password'=>md5($password),'school_otp'=>0);
+        $this->sm->update_school($update_data,$where);
+        $this->send_response(true,"Success");
+        
+    }
 
 
 
@@ -161,45 +200,45 @@ Class School extends CI_CONTROLLER {
 
   //   }
 
-  //   public function contact_us(){
+    public function contact_us(){
         
-  //       $this->validate($this->input_arr['contact_us_rule'], $this->input_arr['contact_us_parameters'], true);
-  //       $input = $this->get_input($this->input_arr['contact_us_parameters']);
-  //       $subject = 'OnlineSteelStore || '.$input['subject'];
-  //       $name = $input['name'];
-  //       $phone = $input['phone'];
-  //       $email = $input['email'];
-  //       $message = $input['message']; 
-  //       $mes = 'Hi Admin, <br/> You have one message for you. <br/><b>Details</b><br/> Name : '.$name.'<br/> Mobile : '.$phone.'<br/> Email : '.$email.'<br/> Message : '.$message;
-  //       $to = 'enquiry@onlinesteelstore.com';  
-  //       $this->mailtouser($to,$subject,$mes);
-  //       $this->send_response(true,"Success",'','');
+        $this->validate($this->input_arr['contact_us_rule'], $this->input_arr['contact_us_parameters'], true);
+        $input = $this->get_input($this->input_arr['contact_us_parameters']);
+        $subject = 'OnlineSteelStore || '.$input['subject'];
+        $name = $input['name'];
+        $phone = $input['phone'];
+        $email = $input['email'];
+        $message = $input['message']; 
+        $mes = 'Hi Admin, <br/> You have one message for you. <br/><b>Details</b><br/> Name : '.$name.'<br/> Mobile : '.$phone.'<br/> Email : '.$email.'<br/> Message : '.$message;
+        $to = 'prateek.singh@vvdntech.com';  
+        $this->mailtouser($to,$subject,$mes);
+        $this->send_response(true,"Success",'','');
                     
-  //   }
+    }
 
 
-  //   public function mailtouser($to, $subject, $message) 
-  //   {
-  //       $this->load->library('email');
-  //       $this->email->set_newline("\r\n");
-  //       $this->email->from('enquiry@gmail.com', 'Test');
-  //       $this->email->to($to);
+    public function mailtouser($to, $subject, $message,$from="info@schoolkitapp.com",$name="SchoolKit Support") 
+    {
+        $this->load->library('email');
+        $this->email->set_newline("\r\n");
+        $this->email->from($from, $name);
+        $this->email->to($to);
 
-  //       $this->email->set_mailtype("html");
-  //       $this->email->subject($subject);
-  //       $this->email->message($message);
-  //       $is_mailed = $this->email->send();
-  //       if ($is_mailed) 
-  //       {
-  //           return 1;
+        $this->email->set_mailtype("html");
+        $this->email->subject($subject);
+        $this->email->message($message);
+        $is_mailed = $this->email->send();
+        if ($is_mailed) 
+        {
+            return 1;
             
-  //       } 
-  //       else 
-  //       {
-  //           return 0;
-  //       }
+        } 
+        else 
+        {
+            return 0;
+        }
         
-  //   }
+    }
 
 
 

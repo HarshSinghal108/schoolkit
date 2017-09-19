@@ -171,9 +171,6 @@ Class Admin extends CI_CONTROLLER {
 			exit;
 		}
 
-	
-
-
 
 }
 ?>
