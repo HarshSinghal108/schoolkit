@@ -41,7 +41,16 @@ Class School extends CI_CONTROLLER {
         if (sizeof($data)>0){
             $this->send_response(false, 'Email_Already_Exist');
         }
-        else{
+        $where = "(school_mobile1='".$input['mobile1']."' OR school_mobile2='".$input['mobile1']."')";
+        $data = $this->sm->get_school($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Mobile_1_Already_Exist');
+        }
+        $where = "(school_mobile1='".$input['mobile2']."' OR school_mobile2='".$input['mobile2']."')";
+        $data = $this->sm->get_school($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Mobile_2_Already_Exist');
+        }
             $time=time();
             $school_data=array('school_name'=>$input['name'],'school_email'=>$input['email'],'school_password'=>md5($input['password']),'school_mobile1'=>$input['mobile1'],'school_mobile2'=>$input['mobile2'],'school_address'=>$input['address'],'school_landmark'=>$input['landmark'],'school_city'=>$input['city'],'school_state'=>$input['state'],'school_country'=>$input['country'],'school_secret_key'=>$input['secret_key'],'school_referal_admin_id'=>$input['referal_admin_id'],'school_pincode'=>$input['pincode'],'school_created_on'=>$time,'school_updated_on'=>$time);
             $id = $this->sm->insert_school($school_data);
@@ -58,7 +67,7 @@ Class School extends CI_CONTROLLER {
                 $this->send_response(false, 'Please_Try_Later');    
             }
 
-        }            
+                    
 
     }
 
@@ -342,6 +351,8 @@ function validate_email($email) {
         $this->email->subject($subject);
         $this->email->message($message);
         $is_mailed = $this->email->send();
+        echo $is_mailed;
+        die;
         if ($is_mailed) 
         {
             return 1;
