@@ -192,7 +192,7 @@ Class School extends CI_CONTROLLER {
         $this->validate($this->input_arr['forget_password_rule'], $this->input_arr['forget_password_parameters'], true);
         $input = $this->get_input($this->input_arr['forget_password_parameters']);
         $email = $input['email'];
-        $where = '(school_email="'.$email.'" OR school_mobile1="'.$email.'" OR school_mobile2="'.$email.'")';
+        $where = "(school_email='".$email."' OR school_mobile1='".$email."' OR school_mobile2='".$email."')";
         $select = array('school_email','school_name');
         $data = $this->sm->get_school($where,$select);
         if (sizeof($data)==0)
