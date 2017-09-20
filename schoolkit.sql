@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost:3306
--- Generation Time: Sep 19, 2017 at 09:27 PM
+-- Generation Time: Sep 20, 2017 at 11:23 PM
 -- Server version: 5.6.35-1+deb.sury.org~precise+0.1
 -- PHP Version: 5.5.37-1+deprecated+dontuse+deb.sury.org~precise+1
 
@@ -51,7 +51,14 @@ CREATE TABLE IF NOT EXISTS `class` (
   `class_created_by` int(11) NOT NULL,
   `class_updated_by` int(11) NOT NULL,
   PRIMARY KEY (`class_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `class`
+--
+
+INSERT INTO `class` (`class_id`, `class_school_id`, `class_name`, `class_status`, `class_number_of_student`, `class_created_on`, `class_updated_on`, `class_created_by`, `class_updated_by`) VALUES
+(2, 4, 'TTe', 1, 10, 1505928736, 1505928964, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -143,27 +150,22 @@ CREATE TABLE IF NOT EXISTS `package` (
   `package_id` int(11) NOT NULL AUTO_INCREMENT,
   `package_school_id` int(11) NOT NULL,
   `package_number_of_student` int(11) NOT NULL,
+  `package_number_of_months` int(11) NOT NULL,
   `package_charge` int(11) NOT NULL,
   `package_total_charge` int(11) NOT NULL,
   `package_start_date` int(11) NOT NULL,
   `package_end_date` int(11) NOT NULL,
   `package_updated_on` int(11) NOT NULL,
   `package_created_on` int(11) NOT NULL,
-  `package_number_of_months` int(11) NOT NULL,
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `package`
 --
 
-INSERT INTO `package` (`package_id`, `package_school_id`, `package_number_of_student`, `package_charge`, `package_total_charge`, `package_start_date`, `package_end_date`, `package_updated_on`, `package_created_on`, `package_number_of_months`) VALUES
-(1, 2, 121, 1222, 17891302, 0, 0, 1505556023, 1505556023, 121),
-(2, 3, 11, 11, 1331, 0, 0, 1505556465, 1505556465, 11),
-(3, 4, 11, 11, 1331, 0, 0, 1505556512, 1505556512, 11),
-(4, 5, 3, 1, 6, 0, 0, 1505556572, 1505556572, 2),
-(5, 6, 12, 121, 17424, 0, 0, 1505556713, 1505556713, 12),
-(6, 1, 100, 10, 12000, 0, 0, 1505707347, 1505707347, 12);
+INSERT INTO `package` (`package_id`, `package_school_id`, `package_number_of_student`, `package_number_of_months`, `package_charge`, `package_total_charge`, `package_start_date`, `package_end_date`, `package_updated_on`, `package_created_on`) VALUES
+(2, 4, 10, 12, 240, 28800, 0, 0, 1505372472, 1505372472);
 
 -- --------------------------------------------------------
 
@@ -230,14 +232,14 @@ CREATE TABLE IF NOT EXISTS `school` (
   `school_updated_on` int(11) NOT NULL,
   `school_pincode` int(11) NOT NULL,
   PRIMARY KEY (`school_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `school`
 --
 
 INSERT INTO `school` (`school_id`, `school_name`, `school_email`, `school_mobile1`, `school_mobile2`, `school_address`, `school_landmark`, `school_city`, `school_state`, `school_country`, `school_password`, `school_secret_key`, `school_otp`, `school_referal_admin_id`, `school_active_status`, `school_registration_status`, `school_created_on`, `school_updated_on`, `school_pincode`) VALUES
-(1, 'KV Deoria', 'prateek3693@gmail.com', 9568997343, 9568997343, 'b22 infocity 1, sec 34 gurgaon', 'jail road', 'deoria', 'Uttar Pradesh', 'India', '81dc9bdb52d04dc20036dbd8313ed055', 'abc', 4516, 123, 0, 0, 1505707347, 1505707347, 274001);
+(4, 'TT', 'singhal.harsh1994@gmail.com', 909090, 79798, 'hhyhlk', 'mh,hk', 'hkhkk', 'jlj', 'hkhkh', 'e10adc3949ba59abbe56e057f20f883e', '12345', NULL, 1, 0, 0, 1505372472, 1505372472, 8989);
 
 -- --------------------------------------------------------
 
@@ -259,12 +261,15 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 
 INSERT INTO `sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('95cc557e9ec59803971846dd9bc7af5ff6aecc71', '::1', 1504640992, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343634303939323b),
-
-('3ec059ea085771ca6bfe3e62cc56d8cfacba6747', '::1', 1505556967, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353535353330333b),
-('2344d0b32c4ecea9ccae87fbac5cb81da4126382', '::1', 1505713449, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353730363834333b757365725f6c6f676765645f696e7c733a313a2231223b726f6c657c733a363a227363686f6f6c223b7363686f6f6c5f69647c733a313a2231223b),
-('e192a5a5a5d2fa9dfb124fa7c64f332e47534404', '::1', 1505716723, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353731363732333b),
-('5f0d5b7defd12e594a34dad7a4975eb8fc20ea5f', '127.0.0.1', 1505805397, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353830313639303b),
-('3f380403d6e1fdc96f8d9186aecff4cac1192bb9', '::1', 1505813539, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353831323637383b);
+('aa11475d54bf545f7705d5c5ee3cf19902497156', '::1', 1504896770, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530343839363737303b),
+('e74f38115504b2e43185c4666c0a2d587c3f5e70', '::1', 1505367986, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353336333936323b),
+('b5ffec8aeb2738ec76f6a22642907ba8bb67f0c8', '::1', 1505372472, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353337323437323b),
+('b6ae0897c289aa83ad34e5fd0d0a1fe63073cda3', '::1', 1505477948, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353437373934383b),
+('e22fa6072b09f1686b230c72fc9da8b1fba1e9ba', '::1', 1505662817, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353636323831373b),
+('6aa321b59bd229a4b1b043b3ba9b4b2fef3f0945', '::1', 1505662840, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353636323834303b),
+('8d2deb46bbea5ad51a53e68195695b2db4e35a85', '::1', 1505827173, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353832343832333b757365725f6c6f676765645f696e7c733a313a2231223b726f6c657c733a363a227363686f6f6c223b7363686f6f6c5f69647c733a313a2234223b),
+('a8fe12d88f520b74cf59233baa2fcf68f3f8a380', '::1', 1505837726, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353833363031353b757365725f6c6f676765645f696e7c733a313a2231223b726f6c657c733a363a227363686f6f6c223b7363686f6f6c5f69647c733a313a2234223b),
+('a7ddabacc924c34cb70afc78be38d18caff6569a', '::1', 1505929606, 0x5f5f63695f6c6173745f726567656e65726174657c693a313530353932383535323b757365725f6c6f676765645f696e7c733a313a2231223b726f6c657c733a363a227363686f6f6c223b7363686f6f6c5f69647c733a313a2234223b);
 
 -- --------------------------------------------------------
 
@@ -366,7 +371,14 @@ CREATE TABLE IF NOT EXISTS `teacher` (
   `teacher_created_on` int(11) NOT NULL,
   `teacher_updated_on` int(11) NOT NULL,
   PRIMARY KEY (`teacher_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `teacher`
+--
+
+INSERT INTO `teacher` (`teacher_id`, `teacher_school_id`, `teacher_name`, `teacher_email`, `teacher_mobile`, `teacher_address`, `teacher_city`, `teacher_country`, `teacher_state`, `teacher_pincode`, `teacher_status`, `teacher_password`, `teacher_otp`, `teacher_created_on`, `teacher_updated_on`) VALUES
+(1, 4, 'TT', 'singhal.harshjh1994@gmail.com', 909090, 'hhyhlk', 'hkhkk', 'hkhkh', 'jlj', 898968768, 0, 'e10adc3949ba59abbe56e057f20f883e', 0, 1505929534, 1505929534);
 
 -- --------------------------------------------------------
 
@@ -378,8 +390,18 @@ CREATE TABLE IF NOT EXISTS `teacher_class` (
   `tc_id` int(11) NOT NULL AUTO_INCREMENT,
   `tc_teacher_id` int(11) NOT NULL,
   `tc_class_id` int(11) NOT NULL,
+  `tc_created_on` int(11) NOT NULL,
+  `tc_updated_on` int(11) NOT NULL,
+  `tc_school_id` int(11) NOT NULL,
   PRIMARY KEY (`tc_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `teacher_class`
+--
+
+INSERT INTO `teacher_class` (`tc_id`, `tc_teacher_id`, `tc_class_id`, `tc_created_on`, `tc_updated_on`, `tc_school_id`) VALUES
+(1, 1, 2, 1505928736, 1505929606, 4);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

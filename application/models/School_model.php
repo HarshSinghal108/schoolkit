@@ -11,6 +11,8 @@ class School_model extends CI_MODEL{
     public $school_table_name = 'school';
     public $package_table_name = 'package';
     public $teacher_table_name = 'teacher';
+    public $class_table_name = 'class';
+    public $teacher_class_table_name = 'teacher_class';
 
     public function get_school($where,$select=''){
 
@@ -82,10 +84,67 @@ class School_model extends CI_MODEL{
     }
 
 
+    public function insert_class($data){
+        $query = $this->db->insert($this->class_table_name,$data);
+        if($this->db->affected_rows()==1){
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+
+    public function insert_teacher_class($data){
+        $query = $this->db->insert($this->teacher_class_table_name,$data);
+        if($this->db->affected_rows()==1){
+            return $this->db->insert_id();
+        }
+        return false;
+    }
+
+    public function update_class($where,$data)
+    {
+        $query=$this->db->where($where)->update($this->class_table_name,$data);
+        return true;
+    }
+
+
+    public function update_teacher_class($where,$data)
+    {
+        $query=$this->db->where($where)->update($this->teacher_class_table_name,$data);
+        return true;
+    }
+
+    public function delete_class($where)
+    {
+        $query=$this->db->where($where)->delete($this->class_table_name);
+        return true;
+    }
+
+
+
+    public function get_class($where,$select=''){
+
+        $arr=array();
+        if($select == '')
+            $query=$this->db->select('*')->where($where)->get($this->class_table_name);
+        else
+            $query=$this->db->select($select)->where($where)->get($this->class_table_name);
+        $arr=$query->result_array();
+        return $arr;
+    }
 
 
 
 
+    public function get_teacher_class($where,$select=''){
+
+        $arr=array();
+        if($select == '')
+            $query=$this->db->select('*')->where($where)->get($this->teacher_class_table_name);
+        else
+            $query=$this->db->select($select)->where($where)->get($this->teacher_class_table_name);
+        $arr=$query->result_array();
+        return $arr;
+    }
 
 
 

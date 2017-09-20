@@ -255,57 +255,6 @@ Class School extends CI_CONTROLLER {
     }
 
 
-  //   public function change_password(){
-		// if(!$this->session->userdata('user_id'))
-  //       {
-  //           $this->send_response(false, 'Invalid Login');
-  //       }
-  //       $user_id=$this->session->userdata('user_id');
-
-  //       $this->validate($this->input_arr['change_password_rule'], $this->input_arr['change_password_parameters'], true);
-  //       $input = $this->get_input($this->input_arr['change_password_parameters']);
-
-  //       $time=time();
-  //       if($input['confirm_new_password'] != $input['new_password']){
-  //          $this->send_response(false, 'Password Mismatched'); 
-  //       }
-  //       $where = array('user_id'=>$user_id,'user_password'=>md5($input['old_password']));
-  //       $is_valid = $this->mm->get_user($where);
-        
-  //       if(sizeof($is_valid)==0){
-  //       	$this->send_response(false, 'Invalid Old Password');	
-  //       }
-
-  //       $data=array('user_password'=>md5($input['new_password']),'user_updated_on'=>$time);
-  //       $id = $this->mm->update_user($data,$where);
-  //       if($id){
-  //           $this->send_response(true,"Success",'','');
-  //       }
-  //       else{
-  //           $this->send_response(false, 'Please Try Later');    
-  //       }                   
-
-  //   }
-
-  //   public function get_user_profile(){
-  //       if(!$this->session->userdata('user_id'))
-  //       {
-  //           $this->send_response(false, 'Invalid Login');
-  //       }
-  //       $user_id=$this->session->userdata('user_id');
-
-  //       $where = array('user_id'=>$user_id);
-  //       $select = ('user_id,user_name,user_email,user_mobile,user_company_name,user_company_email,user_company_profile,user_company_mobile,user_company_address,user_company_gst_no,user_company_id_no,user_delivery_address');
-  //       $data = $this->mm->get_user($where,$select);
-  //       if(sizeof($data)==0){
-  //           $this->send_response(false, 'No Record Found');
-  //       }
-  //       else{
-  //           $this->send_response(true,"Success",'',$data[0]);    
-  //       }                   
-
-  //   }
-
     public function contact_us(){
         
         $this->validate($this->input_arr['contact_us_rule'], $this->input_arr['contact_us_parameters'], true);
@@ -320,6 +269,166 @@ Class School extends CI_CONTROLLER {
         $this->mailtouser($to,$subject,$mes);
         $this->send_response(true,"Success",'','');
                     
+    }
+
+
+    public function add_class()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+        $this->validate($this->input_arr['add_class_rule'], $this->input_arr['add_class_parameters'], true);
+        $input = $this->get_input($this->input_arr['add_class_parameters']);
+        
+        $time=time();
+        $class_data=array('class_school_id'=>$school_id,'class_name'=>$input['name'],'class_status'=>$input['status'],'class_created_on'=>$time,'class_updated_on'=>$time);
+        $id = $this->sm->insert_class($class_data);
+        if($id){
+            $teacher_class_data=array('tc_school_id'=>$school_id,'tc_class_id'=>$id,'tc_created_on'=>$time,'tc_updated_on'=>$time);
+            $id = $this->sm->insert_teacher_class($teacher_class_data);
+          
+            $this->send_response(true,"Success",'',$id);
+            
+        }
+        else{
+            $this->send_response(false, 'Please_Try_Later');    
+        }    
+    }
+
+
+
+    public function edit_class()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+        $this->validate($this->input_arr['edit_class_rule'], $this->input_arr['edit_class_parameters'], true);
+        $input = $this->get_input($this->input_arr['edit_class_parameters']);
+        $where = array('class_id'=>$input['class_id']);
+        $data = $this->sm->get_class($where);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+
+        $time=time();
+        $class_data=array('class_name'=>$input['name'],'class_number_of_student'=>$input['nos'],'class_status'=>$input['status'],'class_updated_on'=>$time);
+        $id = $this->sm->update_class($where,$class_data);
+        if($id){
+            $this->send_response(true,"Success",'',$id);
+            
+        }
+        else{
+            $this->send_response(false, 'Please_Try_Later');    
+        }
+    
+    }
+
+
+    public function list_classes()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id'); 
+
+        $where = array('class_school_id'=>$school_id);
+        $select = 'class_id as id,class_name as name,class_number_of_student as nos,class_status as status,class_created_on added_time';
+        $data = $this->sm->get_class($where,$select);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        else{
+            $this->send_response(false,'Class_List','',$data);    
+        }
+    }
+
+
+    public function delete_class()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+
+        $this->validate($this->input_arr['delete_class_rule'], $this->input_arr['delete_class_parameters'], true);
+        $input = $this->get_input($this->input_arr['delete_class_parameters']);
+
+        $where = array('class_id'=>$input['class_id']);
+        $data = $this->sm->get_class($where);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        
+        $this->sm->delete_class($where);    
+        $this->send_response(true,"Success",'','');
+                    
+    }
+
+
+
+    public function list_teacher_classes()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id'); 
+
+        $where = array('tc_school_id'=>$school_id);
+        $select = 'tc_id as id,tc_teacher_id as teacher_id,tc_class_id as class_id';
+        $data = $this->sm->get_teacher_class($where,$select);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        else{
+            $this->send_response(false,'Class_List','',$data);    
+        }
+    }
+
+
+    public function map_teacher_class()
+    {
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+
+        $this->validate($this->input_arr['map_teacher_class_rule'], $this->input_arr['map_teacher_class_parameters'], true);
+        $input = $this->get_input($this->input_arr['map_teacher_class_parameters']);
+        
+        $time=time();
+        $where = array('tc_id'=>$input['tc_id']);
+        $data = $this->sm->get_teacher_class($where);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        
+
+        $where1 = array('teacher_id'=>$input['teacher_id']);
+        $data1 = $this->sm->get_teacher($where1);
+        if(sizeof($data1) == 0){
+            $this->send_response(false, 'Teacher_Not_Found');            
+        }
+
+        $teacher_class_data=array('tc_teacher_id'=>$input['teacher_id'],'tc_updated_on'=>$time);
+        $id = $this->sm->update_teacher_class($where,$teacher_class_data);
+        if($id){
+            $this->send_response(true,"Success",'','');
+            
+        }
+        else{
+            $this->send_response(false, 'Please_Try_Later');    
+        }    
     }
 
 

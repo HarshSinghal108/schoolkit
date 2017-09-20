@@ -104,6 +104,7 @@
         )
     );
 
+
     $add_teacher_parameters = array('email','password','mobile','name','address','city','pincode','state','country');
     $add_teacher_rule = array(
         array(
@@ -254,7 +255,7 @@
           
 
 
-$contact_us_parameters = array('name','phone','email','message','subject');
+    $contact_us_parameters = array('name','phone','email','message','subject');
     $contact_us_rule = array(
         array(
             'field' => 'email',
@@ -284,7 +285,69 @@ $contact_us_parameters = array('name','phone','email','message','subject');
 
     );
 
+    $add_class_parameters = array('name','status');
+    $add_class_rule = array(
+        array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'status',
+            'label' => 'Status',
+            'rules' => 'trim|required'
+        )
+    );
 
+    $edit_class_parameters = array('class_id','name','nos','status');
+    $edit_class_rule = array(
+        array(
+            'field' => 'name',
+            'label' => 'Name',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'class_id',
+            'label' => 'Class Id',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'nos',
+            'label' => 'Number of Students',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'status',
+            'label' => 'Status',
+            'rules' => 'trim|required'
+        )
+    );
+
+
+    $delete_class_parameters = array('class_id');
+    $delete_class_rule = array(
+        array(
+            'field' => 'class_id',
+            'label' => 'Class Id',
+            'rules' => 'trim|required'
+        )
+    );
+
+
+    $map_teacher_class_parameters = array('tc_id','teacher_id');
+    $map_teacher_class_rule = array(
+        array(
+            'field' => 'tc_id',
+            'label' => 'Tc Id',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'teacher_id',
+            'label' => 'Teacher Id',
+            'rules' => 'trim|required'
+        )
+
+    );
 
 
     $arr = array('signup_parameters'=>$signup_parameters,
@@ -302,7 +365,16 @@ $contact_us_parameters = array('name','phone','email','message','subject');
                 'forget_password_parameters'=>$forget_password_parameters,
                 'forget_password_rule'=>$forget_password_rule,
                 'check_otp_parameters'=>$check_otp_parameters,
-                'check_otp_rule'=>$check_otp_rule
+                'check_otp_rule'=>$check_otp_rule,
+                'add_class_parameters'=>$add_class_parameters,
+                'add_class_rule'=>$add_class_rule,
+                'edit_class_parameters'=>$edit_class_parameters,
+                'edit_class_rule'=>$edit_class_rule,
+                'delete_class_parameters'=>$delete_class_parameters,
+                'delete_class_rule'=>$delete_class_rule,
+                'map_teacher_class_parameters'=>$map_teacher_class_parameters,
+                'map_teacher_class_rule'=>$map_teacher_class_rule,
+            
             );
         return $arr;
 ?>
