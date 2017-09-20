@@ -41,7 +41,16 @@ Class School extends CI_CONTROLLER {
         if (sizeof($data)>0){
             $this->send_response(false, 'Email_Already_Exist');
         }
-        else{
+        $where = "(school_mobile1='".$input['mobile1']."' OR school_mobile2='".$input['mobile1']."')";
+        $data = $this->sm->get_school($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Mobile_1_Already_Exist');
+        }
+        $where = "(school_mobile1='".$input['mobile2']."' OR school_mobile2='".$input['mobile2']."')";
+        $data = $this->sm->get_school($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Mobile_2_Already_Exist');
+        }
             $time=time();
             $school_data=array('school_name'=>$input['name'],'school_email'=>$input['email'],'school_password'=>md5($input['password']),'school_mobile1'=>$input['mobile1'],'school_mobile2'=>$input['mobile2'],'school_address'=>$input['address'],'school_landmark'=>$input['landmark'],'school_city'=>$input['city'],'school_state'=>$input['state'],'school_country'=>$input['country'],'school_secret_key'=>$input['secret_key'],'school_referal_admin_id'=>$input['referal_admin_id'],'school_pincode'=>$input['pincode'],'school_created_on'=>$time,'school_updated_on'=>$time);
             $id = $this->sm->insert_school($school_data);
@@ -58,7 +67,7 @@ Class School extends CI_CONTROLLER {
                 $this->send_response(false, 'Please_Try_Later');    
             }
 
-        }            
+                    
 
     }
 
@@ -192,7 +201,12 @@ Class School extends CI_CONTROLLER {
         $this->validate($this->input_arr['forget_password_rule'], $this->input_arr['forget_password_parameters'], true);
         $input = $this->get_input($this->input_arr['forget_password_parameters']);
         $email = $input['email'];
-        $where = '(school_email="'.$email.'" OR school_mobile1="'.$email.'" OR school_mobile2="'.$email.'")';
+        if($this->validate_email($email)){
+            $where = "(school_email='".$email."')";
+        }
+        else{
+              $where = "(school_email='".$email."' OR school_mobile1='".$email."' OR school_mobile2='".$email."')";
+        }
         $select = array('school_email','school_name');
         $data = $this->sm->get_school($where,$select);
         if (sizeof($data)==0)
@@ -209,6 +223,9 @@ Class School extends CI_CONTROLLER {
         $this->send_response(true,"Success");
     }
 
+function validate_email($email) {
+    return (preg_match("/(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/", $email) || !preg_match("/^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/", $email)) ? false : true;
+}
 
     public function check_otp(){
         $this->validate($this->input_arr['check_otp_rule'], $this->input_arr['check_otp_parameters'], true);
