@@ -95,7 +95,7 @@
         array(
             'field' => 'email',
             'label' => 'Email',
-            'rules' => 'trim|required|valid_email'
+            'rules' => 'trim|required'
         ),
         array(
             'field' => 'password',
@@ -105,7 +105,7 @@
     );
 
 
-    $add_teacher_parameters = array('email','password','mobile','name','address','city','pincode','state','country');
+    $add_teacher_parameters = array('email','password','mobile','name','address','city','pincode','state','country','gender','dob');
     $add_teacher_rule = array(
         array(
             'field' => 'name',
@@ -151,11 +151,21 @@
             'field' => 'password',
             'label' => 'Password',
             'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'gender',
+            'label' => 'gender',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'dob',
+            'label' => 'dob',
+            'rules' => 'trim|required'
         )
     );
 
 
-    $edit_teacher_parameters = array('teacher_id','email','password','mobile','name','address','city','pincode','state','country');
+    $edit_teacher_parameters = array('teacher_id','email','password','mobile','name','address','city','pincode','state','country','gender','dob');
     $edit_teacher_rule = array(
         array(
             'field' => 'teacher_id',
@@ -205,12 +215,32 @@
             'field' => 'password',
             'label' => 'Password',
             'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'gender',
+            'label' => 'gender',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'dob',
+            'label' => 'dob',
+            'rules' => 'trim|required'
         )
+
     );
 
 
     $delete_teacher_parameters = array('teacher_id');
     $delete_teacher_rule = array(
+        array(
+            'field' => 'teacher_id',
+            'label' => 'Teacher Id',
+              'rules' => 'trim|required'
+        )
+    );
+
+      $view_teacher_parameters = array('teacher_id');
+    $view_teacher_rule = array(
         array(
             'field' => 'teacher_id',
             'label' => 'Teacher Id',
@@ -285,7 +315,7 @@
 
     );
 
-    $add_class_parameters = array('name','status');
+    $add_class_parameters = array('name','status','nos');
     $add_class_rule = array(
         array(
             'field' => 'name',
@@ -295,6 +325,11 @@
         array(
             'field' => 'status',
             'label' => 'Status',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'nos',
+            'label' => 'Number of Students',
             'rules' => 'trim|required'
         )
     );
@@ -333,7 +368,14 @@
         )
     );
 
-
+  $view_class_parameters = array('class_id');
+    $view_class_rule = array(
+        array(
+            'field' => 'class_id',
+            'label' => 'class Id',
+              'rules' => 'trim|required'
+        )
+    );
     $map_teacher_class_parameters = array('tc_id','teacher_id');
     $map_teacher_class_rule = array(
         array(
@@ -360,6 +402,8 @@
                 'edit_teacher_rule'=>$edit_teacher_rule,
                 'delete_teacher_parameters'=>$delete_teacher_parameters,
                 'delete_teacher_rule'=>$delete_teacher_rule,
+                'view_teacher_parameters'=>$view_teacher_parameters,
+                'view_teacher_rule'=>$view_teacher_rule,
                 'contact_us_parameters'=>$contact_us_parameters,
                 'contact_us_rule'=>$contact_us_rule,
                 'forget_password_parameters'=>$forget_password_parameters,
@@ -372,6 +416,8 @@
                 'edit_class_rule'=>$edit_class_rule,
                 'delete_class_parameters'=>$delete_class_parameters,
                 'delete_class_rule'=>$delete_class_rule,
+                'view_class_parameters'=>$view_class_parameters,
+                'view_class_rule'=>$view_class_rule,
                 'map_teacher_class_parameters'=>$map_teacher_class_parameters,
                 'map_teacher_class_rule'=>$map_teacher_class_rule,
             

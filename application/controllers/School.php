@@ -28,6 +28,7 @@ Class School extends CI_CONTROLLER {
         $this->load->library('form_validation');
         $this->load->library('session');
         $this->load->model('school_model', 'sm', true);
+        $this->load->model('teacher_model', 'tm', true);
         $this->input_arr=include('school_variables.php');
         
     }   
@@ -97,8 +98,9 @@ Class School extends CI_CONTROLLER {
             $this->send_response(true, 'Invalid_Login');
         }
         $school_id=$this->session->userdata('school_id');
-
-        $this->send_response(true,'Success','',$school_id);
+        $where = array('school_id' => $school_id);
+        $data = $this->sm->get_school($where);
+        $this->send_response(true,'Success','',$data[0]['school_name']);
     }
 
     public function school_logout()
@@ -133,7 +135,7 @@ Class School extends CI_CONTROLLER {
         }
         else{
             $time=time();
-            $teacher_data=array('teacher_school_id'=>$school_id,'teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>md5($input['password']),'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_created_on'=>$time,'teacher_updated_on'=>$time);
+            $teacher_data=array('teacher_school_id'=>$school_id,'teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>$input['password'],'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_created_on'=>$time,'teacher_updated_on'=>$time,'teacher_dob'=>$input['dob'],'teacher_gender'=>$input['gender']);
             $id = $this->sm->insert_teacher($teacher_data);
             if($id){
                 $this->send_response(true,"Success",'',$id);
@@ -165,7 +167,10 @@ Class School extends CI_CONTROLLER {
         }
 
         $time=time();
-        $teacher_data=array('teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>md5($input['password']),'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_updated_on'=>$time);
+        $teacher_data=array('teacher_name'=>$input['name'],'teacher_email'=>$input['email'],'teacher_password'=>$input['password'],'teacher_mobile'=>$input['mobile'],'teacher_address'=>$input['address'],'teacher_city'=>$input['city'],'teacher_state'=>$input['state'],'teacher_country'=>$input['country'],'teacher_pincode'=>$input['pincode'],'teacher_updated_on'=>$time,'teacher_dob'=>$input['dob']);
+        if($input['gender']!=null){
+            $teacher_data = array('teacher_gender'=>$input['gender']);
+        }
         $id = $this->sm->update_teacher($where,$teacher_data);
         if($id){
             $this->send_response(true,"Success",'',$id);
@@ -187,13 +192,28 @@ Class School extends CI_CONTROLLER {
         $school_id=$this->session->userdata('school_id'); 
 
         $where = array('teacher_school_id'=>$school_id);
-        $select = 'teacher_id as id,teacher_name as name,teacher_email as email,teacher_mobile as mobile,teacher_address as address,teacher_city as city,teacher_state as state,teacher_country as country,teacher_pincode as pincode,teacher_created_on added_time';
+        $select = 'teacher_id,teacher_name as name,teacher_email as email,teacher_mobile as mobile,teacher_address as address,teacher_city as city,teacher_state as state,teacher_country as country,teacher_pincode as pincode,teacher_created_on as added_time, teacher_dob as dob , teacher_gender as gender';
         $data = $this->sm->get_teacher($where,$select);
         if(sizeof($data) == 0){
             $this->send_response(false, 'No_Record_Found');            
         }
         else{
-            $this->send_response(false,'Teacher_List','',$data);    
+            $this->send_response(true,'Teacher_List','',$data);    
+        }
+    }
+
+    public function view_teacher(){
+        $this->validate($this->input_arr['view_teacher_rule'], $this->input_arr['view_teacher_parameters'], true);
+        $input = $this->get_input($this->input_arr['view_teacher_parameters']);
+        $teacher_id = $input['teacher_id'];
+       $select = 'teacher_id as id,teacher_name as name,teacher_email as email,teacher_mobile as mobile,teacher_address as address,teacher_city as city,teacher_state as state,teacher_country as country,teacher_pincode as pincode,teacher_created_on as added_time, teacher_dob as dob , teacher_gender as gender,teacher_password as password';
+        $where = array('teacher_id'=>$teacher_id);
+        $data = $this->sm->get_teacher($where,$select);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        else{
+            $this->send_response(true,'Teacher_List','',$data[0]);    
         }
     }
 
@@ -242,8 +262,7 @@ function validate_email($email) {
         }
         $update_data = array('school_password'=>md5($password),'school_otp'=>0);
         $this->sm->update_school($update_data,$where);
-        $this->send_response(true,"Success");
-        
+        $this->send_response(true,"Success");        
     }
 
 
@@ -301,7 +320,7 @@ function validate_email($email) {
         $input = $this->get_input($this->input_arr['add_class_parameters']);
         
         $time=time();
-        $class_data=array('class_school_id'=>$school_id,'class_name'=>$input['name'],'class_status'=>$input['status'],'class_created_on'=>$time,'class_updated_on'=>$time);
+        $class_data=array('class_school_id'=>$school_id,'class_name'=>$input['name'],'class_number_of_student'=>$input['nos'],'class_status'=>$input['status'],'class_created_on'=>$time,'class_updated_on'=>$time);
         $id = $this->sm->insert_class($class_data);
         if($id){
             $teacher_class_data=array('tc_school_id'=>$school_id,'tc_class_id'=>$id,'tc_created_on'=>$time,'tc_updated_on'=>$time);
@@ -358,11 +377,19 @@ function validate_email($email) {
         $where = array('class_school_id'=>$school_id);
         $select = 'class_id as id,class_name as name,class_number_of_student as nos,class_status as status,class_created_on added_time';
         $data = $this->sm->get_class($where,$select);
+        
+        $where = array('tc_school_id'=>$school_id);
+        $select = 'tc_id,tc_teacher_id,tc_class_id';
+        $data2 = $this->sm->get_teacher_class($where,$select);
+        for($i = 0;$i<count($data);$i++){
+            $data[$i]['teacher_id']=$data2[$i]['tc_teacher_id'];
+        }
+        $response['class'] = $data;
         if(sizeof($data) == 0){
             $this->send_response(false, 'No_Record_Found');            
         }
         else{
-            $this->send_response(false,'Class_List','',$data);    
+            $this->send_response(true,'Class_List','',$response);    
         }
     }
 
@@ -390,7 +417,20 @@ function validate_email($email) {
                     
     }
 
-
+    public function view_class(){
+        $this->validate($this->input_arr['view_class_rule'], $this->input_arr['view_class_parameters'], true);
+        $input = $this->get_input($this->input_arr['view_class_parameters']);
+        $class_id = $input['class_id'];
+      $select = 'class_id as id,class_name as name,class_number_of_student as nos,class_status as status,class_created_on added_time';
+          $where = array('class_id'=>$class_id);
+        $data = $this->sm->get_class($where,$select);
+        if(sizeof($data) == 0){
+            $this->send_response(false, 'No_Record_Found');            
+        }
+        else{
+            $this->send_response(true,'class_List','',$data[0]);    
+        }
+    }
 
     public function list_teacher_classes()
     {
@@ -424,7 +464,7 @@ function validate_email($email) {
         $input = $this->get_input($this->input_arr['map_teacher_class_parameters']);
         
         $time=time();
-        $where = array('tc_id'=>$input['tc_id']);
+        $where = array('tc_class_id'=>$input['tc_id']);
         $data = $this->sm->get_teacher_class($where);
         if(sizeof($data) == 0){
             $this->send_response(false, 'No_Record_Found');            
@@ -449,6 +489,30 @@ function validate_email($email) {
     }
 
 
+    public function get_dashboard(){
+        if(!$this->session->userdata('school_id'))
+        {
+            $this->send_response(false, 'Invalid Login');
+        }
+        $school_id=$this->session->userdata('school_id');
+        
+
+        $data['total_student'] = $this->tm->get_student(array('student_school_id'=>$school_id));
+        $response['total_student'] = count($data['total_student']);
+
+        $data['total_male_student'] = $this->tm->get_student(array('student_school_id'=>$school_id,'student_gender'=>'M'));
+        $response['total_male_student'] = count($data['total_male_student']);
+
+        $data['total_female_student'] = $this->tm->get_student(array('student_school_id'=>$school_id,'student_gender'=>'F'));
+        $response['total_female_student'] = count($data['total_female_student']);
+
+        $data['total_teacher'] = $this->tm->get_teacher(array('teacher_school_id'=>$school_id));
+        $response['total_teacher'] = count($data['total_teacher']);
+
+        $response['total_sms_send'] = 0;
+        $this->send_response(true,"Success","",$response);
+        
+    }
     public function mailtouser($to, $subject, $message,$from="info@schoolkitapp.com",$name="SchoolKit Support") 
     {
         $this->load->library('email');

@@ -52,7 +52,6 @@ class School_model extends CI_MODEL{
 
 
     public function get_teacher($where,$select=''){
-
         $arr=array();
         if($select == '')
             $query=$this->db->select('*')->where($where)->get($this->teacher_table_name);
