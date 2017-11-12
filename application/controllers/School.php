@@ -59,7 +59,7 @@ Class School extends CI_CONTROLLER {
 
                 $total_charge = $input['nom'] * $input['nos'] * $input['amount'];
                 $package_data = array('package_school_id'=>$id,'package_number_of_student'=>$input['nos'],'package_charge'=>$input['amount'],'package_number_of_months'=>$input['nom'],'package_total_charge'=>$total_charge,'package_created_on'=>$time,'package_updated_on'=>$time);
-                $package_id = $this->sm->insert_school_package($package_data);
+                // $package_id = $this->sm->insert_school_package($package_data);
 
                 $this->send_response(true,"Success",'',$id);
                 
