@@ -6,7 +6,7 @@
             'field' => 'name',
             'label' => 'Name',
             'rules' => 'trim|required'
-        )    
+        )
         );
 
     $edit_holiday_parameters = array('id','name','start','end','session','month');
@@ -79,6 +79,21 @@
     );
 
 
+    $get_student_attendence_parameters = array('month','session');
+    $get_student_attendence_rule = array(
+        array(
+            'field' => 'month',
+            'label' => 'Month',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'session',
+            'label' => 'Session',
+            'rules' => 'trim|required'
+        )
+    );
+
+
     $arr = array('add_holiday_parameters'=>$add_holiday_parameters,
                 'add_holiday_rule'=>$add_holiday_rule,
                 'edit_holiday_parameters'=>$edit_holiday_parameters,
@@ -86,7 +101,9 @@
                 'take_attendence_parameters'=>$take_attendence_parameters,
                 'take_attendence_rule'=>$take_attendence_rule,
                 'get_attendence_parameters'=>$get_attendence_parameters,
-                'get_attendence_rule'=>$get_attendence_rule 
+                'get_attendence_rule'=>$get_attendence_rule,
+                'get_student_attendence_parameters'=>$get_student_attendence_parameters,
+                'get_student_attendence_rule'=>$get_student_attendence_rule
                 );
         return $arr;
 ?>

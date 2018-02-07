@@ -3,9 +3,9 @@
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class teacher_model extends CI_MODEL{
- 
+
     function __construct(){
-        parent::__construct();  
+        parent::__construct();
     }
 
     public $teacher_table_name = 'teacher';
@@ -65,19 +65,19 @@ class teacher_model extends CI_MODEL{
 
       public function get_students($class_id, $school_id){
           if($class_id ){
-       $sql = "SELECT student_id as id,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
+       $sql = "SELECT student_id as id,student_roll_no as roll_no ,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_school_id=".$school_id." ORDER BY student_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_school_id=".$school_id." ORDER BY student_roll_no ASC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
           }
           else{
-  $sql = "SELECT student_id as id,class_name as class ,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
+  $sql = "SELECT student_id as id,student_roll_no as roll_no ,class_name as class ,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_school_id=".$school_id." ORDER BY sc_class_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_school_id=".$school_id." ORDER BY student_roll_no ASC"; 
        $arr=$this->db->query($sql)->result_array();
         return $arr;
-     
+
           }
     }
 
@@ -86,17 +86,17 @@ public function get_male_students($class_id, $school_id){
           if($class_id ){
        $sql = "SELECT student_id as id,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_gender='M' AND student_school_id=".$school_id." ORDER BY student_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_gender='M' AND student_school_id=".$school_id." ORDER BY student_id DESC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
           }
           else{
   $sql = "SELECT student_id as id,class_name as class ,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_gender='M' AND student_school_id=".$school_id." ORDER BY sc_class_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_gender='M' AND student_school_id=".$school_id." ORDER BY sc_class_id DESC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
-     
+
           }
     }
 
@@ -105,17 +105,17 @@ public function get_female_students($class_id, $school_id){
           if($class_id ){
        $sql = "SELECT student_id as id,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_gender='F' AND student_school_id=".$school_id." ORDER BY student_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id WHERE sc_class_id=".$class_id." AND student_gender='F' AND student_school_id=".$school_id." ORDER BY student_id DESC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
           }
           else{
   $sql = "SELECT student_id as id,class_name as class ,student_father_name as father_name ,student_name as name,student_email as email,student_mobile as mobile,
        student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender
-        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_gender='F' AND student_school_id=".$school_id." ORDER BY sc_class_id DESC"; 
+        FROM student INNER JOIN student_class ON sc_student_id=student_id INNER JOIN class ON sc_class_id = class_id AND student_gender='F' AND student_school_id=".$school_id." ORDER BY sc_class_id DESC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
-     
+
           }
     }
 
@@ -206,7 +206,7 @@ public function get_female_students($class_id, $school_id){
 
 public function get_teacher_class_name($teacher_id){
       $sql = "SELECT class_name,class_id
-        FROM class INNER JOIN teacher_class ON tc_class_id=class_id WHERE tc_teacher_id=".$teacher_id." ORDER BY class_id DESC"; 
+        FROM class INNER JOIN teacher_class ON tc_class_id=class_id WHERE tc_teacher_id=".$teacher_id." ORDER BY class_id DESC";
        $arr=$this->db->query($sql)->result_array();
         return $arr;
 }

@@ -9,8 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 header('Access-Control-Allow-Origin: *');
 Class Teacher extends CI_CONTROLLER {
-    
-   
+
+
      /**
      *  @function   :__construct()
      *  @param      :none
@@ -21,7 +21,7 @@ Class Teacher extends CI_CONTROLLER {
      */
 
 
-    public function __construct() 
+    public function __construct()
     {
 
         parent::__construct();
@@ -30,32 +30,32 @@ Class Teacher extends CI_CONTROLLER {
         $this->load->model('teacher_model', 'tm', true);
         $this->load->model('attendence_model', 'am', true);
         $this->load->model('school_model', 'sm', true);
-        $this->input_arr=include('teacher_variables.php');
-        
-    } 
+        $this->input_arr=include('variables/teacher_variables.php');
 
-    
+    }
+
+
     public function login()
     {
         $this->validate($this->input_arr['login_rule'], $this->input_arr['login_parameters'], true);
         $input = $this->get_input($this->input_arr['login_parameters']);
-                
+
         $where = array('teacher_email' => $input['email'],'teacher_password'=> $input['password']);
         $data = $this->tm->get_teacher($where);
         if (sizeof($data)>0)
         {
-            $this->set_teacher_session('teacher', $data[0]['teacher_id']);  
-            $this->set_school_session('school', $data[0]['teacher_school_id']);  
+            $this->set_teacher_session('teacher', $data[0]['teacher_id']);
+            $this->set_school_session('school', $data[0]['teacher_school_id']);
             $this->send_response(true, 'Success','',$data[0]['teacher_id']);
         }
-        else 
+        else
         {
             $this->send_response(false, 'Invalid_Email_Or_Password');
-        }   
+        }
     }
 
     public function is_teacher_logged_in()
-    {   
+    {
         if(!$this->session->userdata('teacher_id'))
         {
             $this->send_response(true, 'Invalid_Login');
@@ -66,21 +66,21 @@ Class Teacher extends CI_CONTROLLER {
     }
 
     public function teacher_logout()
-    { 
+    {
         $this->session->sess_destroy();
         $this->send_response(true,"Success");
     }
-    
+
 
     public function set_teacher_session($user_role, $id)
      {
-        //set seesion varribles 
+        //set seesion varribles
         $this->session->set_userdata(array('teacher_logged_in' => '1', 'teacher_role' => $user_role, 'teacher_id' => $id));
      }
 
          public function set_school_session($user_role, $id)
      {
-        //set seesion varribles 
+        //set seesion varribles
         $this->session->set_userdata(array('school_logged_in' => '1', 'school_role' => $user_role, 'teacher_school_id' => $id));
      }
 
@@ -96,7 +96,19 @@ Class Teacher extends CI_CONTROLLER {
 
         $this->validate($this->input_arr['add_student_rule'], $this->input_arr['add_student_parameters'], true);
         $input = $this->get_input($this->input_arr['add_student_parameters']);
-        
+
+        $where = array('student_roll_no' => $input['roll_no']);
+        $data = $this->tm->get_student($where);
+        for($i = 0; $i < count($data) ; $i++){
+            $student_id_arr = $data[$i]['student_id'];
+        }
+
+        $where = array('sc_class_id'=>$input['class_id'],'sc_student_id'=>$student_id_arr);
+        $data = $this->tm->get_student_class($where);
+        if (sizeof($data)>0){
+            $this->send_response(false, 'Roll Number Already Assigned !!');
+        }
+
         $where = array('student_email' => $input['email']);
         $data = $this->tm->get_student($where);
         if (sizeof($data)>0){
@@ -104,16 +116,17 @@ Class Teacher extends CI_CONTROLLER {
         }
         else{
             $time=time();
-            $student_data=array('student_school_id'=>$school_id,'student_name'=>$input['name'],'student_email'=>$input['email'],'student_password'=>$input['password'],'student_mobile'=>$input['mobile'],'student_address'=>$input['address'],'student_created_on'=>$time,'student_updated_on'=>$time,'student_dob'=>$input['dob'],'student_gender'=>$input['gender'],'student_father_name'=>$input['father_name']);
+            $student_data=array('student_school_id'=>$school_id,'student_roll_no' => $input['roll_no'],'student_name'=>$input['name'],'student_email'=>$input['email'],'student_password'=>$input['password'],'student_mobile'=>$input['mobile'],'student_address'=>$input['address'],'student_created_on'=>$time,'student_updated_on'=>$time,'student_dob'=>$input['dob'],'student_gender'=>$input['gender'],'student_father_name'=>$input['father_name']);
             $id = $this->tm->insert_student($student_data);
             if($id){
                 $class_student_data = array('sc_class_id'=>$input['class_id'],'sc_student_id'=>$id,'sc_session'=>"2016-17");
                 $this->tm->insert_student_class($class_student_data);
+                $this->mailtouser($input['email'],"Welcome to School Kit","Your Email and password are ".$input['email']." & ".$input['password']);
                 $this->send_response(true,"Success",'',$id);
-                
+
             }
             else{
-                $this->send_response(false, 'Please_Try_Later');    
+                $this->send_response(false, 'Please_Try_Later');
             }
         }
     }
@@ -130,12 +143,12 @@ Class Teacher extends CI_CONTROLLER {
 
         $this->validate($this->input_arr['edit_student_rule'], $this->input_arr['edit_student_parameters'], true);
         $input = $this->get_input($this->input_arr['edit_student_parameters']);
-        
-        
+
+
         $where = array('student_id'=>$input['student_id']);
         $data = $this->tm->get_student($where);
         if(sizeof($data) == 0){
-            $this->send_response(false, 'No_Record_Found');            
+            $this->send_response(false, 'No_Record_Found');
         }
 
         $where = array('student_id!='=>$input['student_id'],'student_email'=>$input['email'],);
@@ -146,14 +159,14 @@ Class Teacher extends CI_CONTROLLER {
 
         $where = array('student_id'=>$input['student_id']);
         $time=time();
-        $student_data=array('student_name'=>$input['name'],'student_email'=>$input['email'],'student_password'=>$input['password'],'student_mobile'=>$input['mobile'],'student_address'=>$input['address'],'student_updated_on'=>$time,'student_dob'=>$input['dob'],'student_gender'=>$input['gender'],'student_father_name'=>$input['father_name']);
+        $student_data=array('student_name'=>$input['name'],'student_roll_no' => $input['roll_no'],'student_email'=>$input['email'],'student_password'=>$input['password'],'student_mobile'=>$input['mobile'],'student_address'=>$input['address'],'student_updated_on'=>$time,'student_dob'=>$input['dob'],'student_gender'=>$input['gender'],'student_father_name'=>$input['father_name']);
         $id = $this->tm->update_student($where,$student_data);
         if($id){
             $this->send_response(true,"Success",'','');
-            
+
         }
         else{
-            $this->send_response(false, 'Please_Try_Later');    
+            $this->send_response(false, 'Please_Try_Later');
         }
     }
 
@@ -165,19 +178,19 @@ Class Teacher extends CI_CONTROLLER {
             $this->send_response(false, 'Invalid Login');
         }
         if($this->session->userdata('teacher_school_id')){
-            $school_id=$this->session->userdata('teacher_school_id'); 
+            $school_id=$this->session->userdata('teacher_school_id');
         }
         else{
             $school_id=$this->session->userdata('school_id');
         }
-        $teacher_id=$this->session->userdata('teacher_id'); 
+        $teacher_id=$this->session->userdata('teacher_id');
         $class_id = $this->input->post('class_id');
         $data = $this->tm->get_students($class_id,$school_id);
         if(sizeof($data) == 0){
-            $this->send_response(false, 'No_Record_Found');            
+            $this->send_response(false, 'No_Record_Found');
         }
         else{
-            $this->send_response(true,'student_List','',$data);    
+            $this->send_response(true,'student_List','',$data);
         }
     }
 
@@ -185,15 +198,15 @@ Class Teacher extends CI_CONTROLLER {
         $this->validate($this->input_arr['view_student_rule'], $this->input_arr['view_student_parameters'], true);
         $input = $this->get_input($this->input_arr['view_student_parameters']);
         $student_id = $input['student_id'];
-       $select = 'student_id as id,student_father_name as father_name , student_password as password ,student_name as name,student_email as email,student_mobile as mobile,student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender';
+       $select = 'student_roll_no as roll_no ,student_id as id,student_father_name as father_name , student_password as password ,student_name as name,student_email as email,student_mobile as mobile,student_address as address,student_created_on as added_time, student_dob as dob , student_gender as gender';
         $where = array('student_id'=>$student_id);
         $data = $this->tm->get_student($where,$select);
         if(sizeof($data) == 0){
-            $this->send_response(false, 'No_Record_Found');            
+            $this->send_response(false, 'No_Record_Found');
         }
         else{
-            $this->send_response(true,'student_List','',$data[0]);    
-        }
+            $this->send_response(true,'Success','',$data[0]);
+             }
     }
 
     public function forget_password(){
@@ -242,13 +255,13 @@ function validate_email($email) {
         $update_data = array('teacher_password'=>$password,'teacher_otp'=>0);
         $this->tm->update_teacher($update_data,$where);
         $this->send_response(true,"Success");
-        
+
     }
 
 
     public function delete_student()
     {
-        if(!$this->session->userdata('school_id'))
+        if(!$this->session->userdata('teacher_school_id'))
         {
             $this->send_response(false, 'Invalid Login');
         }
@@ -261,33 +274,33 @@ function validate_email($email) {
         $where = array('student_id'=>$input['student_id']);
         $data = $this->tm->get_student($where);
         if(sizeof($data) == 0){
-            $this->send_response(false, 'No_Record_Found');            
+            $this->send_response(false, 'No_Record_Found');
         }
-        
-        $this->tm->delete_student($where);    
+
+        $this->tm->delete_student($where);
         $this->send_response(true,"Success",'','');
-            
-        
+
+
     }
 
 
     public function contact_us(){
-        
+
         $this->validate($this->input_arr['contact_us_rule'], $this->input_arr['contact_us_parameters'], true);
         $input = $this->get_input($this->input_arr['contact_us_parameters']);
         $subject = 'OnlineSteelStore || '.$input['subject'];
         $name = $input['name'];
         $phone = $input['phone'];
         $email = $input['email'];
-        $message = $input['message']; 
+        $message = $input['message'];
         $mes = 'Hi Admin, <br/> You have one message for you. <br/><b>Details</b><br/> Name : '.$name.'<br/> Mobile : '.$phone.'<br/> Email : '.$email.'<br/> Message : '.$message;
-        $to = 'prateek.singh@vvdntech.com';  
+        $to = 'prateek.singh@vvdntech.com';
         $this->mailtouser($to,$subject,$mes);
         $this->send_response(true,"Success",'','');
-                    
+
     }
 
-    public function mailtouser($to, $subject, $message,$from="info@schoolkitapp.com",$name="SchoolKit Support") 
+    public function mailtouser($to, $subject, $message,$from="info@schoolkitapp.com",$name="SchoolKit Support")
     {
         $this->load->library('email');
         $this->email->set_newline("\r\n");
@@ -298,16 +311,16 @@ function validate_email($email) {
         $this->email->subject($subject);
         $this->email->message($message);
         $is_mailed = $this->email->send();
-        if ($is_mailed) 
+        if ($is_mailed)
         {
             return 1;
-            
-        } 
-        else 
+
+        }
+        else
         {
             return 0;
         }
-        
+
     }
 
 public function get_dashboard(){
@@ -315,10 +328,10 @@ public function get_dashboard(){
         {
             $this->send_response(false, 'Invalid Login');
         }
-        $school_id=$this->session->userdata('teacher_school_id'); 
-        $teacher_id=$this->session->userdata('teacher_id'); 
+        $school_id=$this->session->userdata('teacher_school_id');
+        $teacher_id=$this->session->userdata('teacher_id');
         $class_id = $this->input->post('class_id');
-        
+
 
         $data['total_student'] = $this->tm->get_students($class_id,$school_id);
         $response['total_student'] = count($data['total_student']);
@@ -339,16 +352,16 @@ public function get_dashboard(){
 
 
 public function get_average_marks($school_id,$class_id, $month, $session){
-   
+
     $arr_of_days_date = $this->get_months_date_days($month,$session);
-    
+
     $student_list_data = $this->tm->get_students($class_id,$school_id);
     for($i = 0;$i<count($student_list_data); $i++){
         $student_list[$i]['id'] = $student_list_data[$i]['id'];
-        $student_list[$i]['name'] = $student_list_data[$i]['name']; 
+        $student_list[$i]['name'] = $student_list_data[$i]['name'];
     }
     $holiday_list = $this->get_holidays_list($school_id, $month, $session,count(arr_of_days_date));
-    
+
     $select = "`status`, `student_id` as id, `date`";
     $where = array('month'=>$month, 'class_id'=>$class_id, 'session'=>$session);
     $attendence_list = $this->am->get_attendence_list($where, $select);
@@ -376,9 +389,9 @@ public function get_average_marks($school_id,$class_id, $month, $session){
                                 break;
                             }
                         }
-                    }            
+                    }
                 }
-            } 
+            }
         }
     }
 
@@ -413,12 +426,22 @@ public function get_average_marks($school_id,$class_id, $month, $session){
 }
 
 public function get_months_date_days($month,$session){
+$current_session = date('Y');
+    $current_month = date('m');
+    $current_date = date('d');
     $start_date  = $session."-".$month."-01";
     $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$session);
     $timestamp = strtotime($start_date);
     $day = (int)date('w', $timestamp);
     $j = 1;
-    for($i = 0; $i < $month_days ;$i++,$j++){
+    if($session<=$current_session && $month<$current_month){
+        $count_days = $month_days;
+    }
+    else{
+        $count_days = $current_date;
+    }
+
+    for($i = 0; $i < $count_days ;$i++,$j++){
         $result[$i]['day'] = $day%7 ;
         $result[$i]['date'] = $j;
         $day++;
@@ -434,21 +457,21 @@ return $result ;
             $date = $holiday_list[$i]['holiday_start_date'];
             for($j = $holiday_list[$i]['holiday_start_date'];$j<=$end_date; $j++){
                 array_push($holiday_dates,$date++);
-            }    
-        }   
+            }
+        }
         return $holiday_dates;
     }
 
-    public function validate($rule, $dataposted, $isset = true) 
+    public function validate($rule, $dataposted, $isset = true)
     {
         $err = array();
         $flag = true;
         //if isset then we check that field is posted or not
-        if ($isset) 
+        if ($isset)
         {
-            foreach ($dataposted as $value) 
+            foreach ($dataposted as $value)
             {
-                if (!isset($_POST[$value]) && $flag) 
+                if (!isset($_POST[$value]) && $flag)
                 {
                     $flag = false;
                     $err[$value] = "You Need to Post " . $value . " field";
@@ -456,7 +479,7 @@ return $result ;
             }
         }
         //true when all things posted
-        if ($flag) 
+        if ($flag)
         {
 
             $this->form_validation->set_rules($rule);
@@ -467,15 +490,15 @@ return $result ;
                 $errors = $this->form_error_formating($dataposted);
                 $this->send_response(false, 'form_errors', $errors);
             }
-        } 
+        }
         else
         {
             $this->send_response(false, 'form_error', $err);
         }
     }
-     
 
-    public function form_error_formating($dataposted) 
+
+    public function form_error_formating($dataposted)
     {
 
         $errorarray = array();
@@ -488,20 +511,20 @@ return $result ;
         }
     }
 
-    public function get_input($inputdata) 
+    public function get_input($inputdata)
     {
-    
+
         $inputs = array();
         //looping throgh input data varriblees
         foreach ($inputdata as $var) {
         //filtering input in required and removed paramteres
                 $inputs[$var] = $this->input->post($var, TRUE);
-            }        
+            }
         return $inputs;
-    }  
+    }
 
 
-    
+
     public function send_response($type,$errormsg,$errors = array(),$data = array()) {
             echo json_encode(array('status' => $type, 'msg' => $errormsg,'errors' => $errors, 'data' => $data));
             exit;

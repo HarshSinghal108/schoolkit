@@ -3,9 +3,9 @@
   if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Attendence_model extends CI_MODEL{
- 
+
     function __construct(){
-        parent::__construct();  
+        parent::__construct();
     }
 
     public $teacher_table_name = 'teacher';
@@ -14,7 +14,7 @@ class Attendence_model extends CI_MODEL{
     public $attendence_table_name = 'attendence';
     public $holiday_table_name = 'holidays';
     public $holiday_school_table_name = 'holiday_school';
-    
+
     public function get_holidays($where,$select=''){
         $arr=array();
         if($select == '')
@@ -60,8 +60,8 @@ public function get_attendence_list($where,$select=''){
     $this->db->where($where);
     $q = $this->db->get($this->attendence_table_name);
     // echo $this->db->last_query();
-    echo $q->num_rows();
-   if ( $q->num_rows() > 0 ) 
+    // echo $q->num_rows();
+   if ( $q->num_rows() > 0 )
    {
       $this->db->where($where);
       $this->db->update($this->attendence_table_name,$data);

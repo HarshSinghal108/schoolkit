@@ -315,7 +315,7 @@
 
     );
 
-    $add_class_parameters = array('name','status','nos');
+    $add_class_parameters = array('name','status','nos','fee');
     $add_class_rule = array(
         array(
             'field' => 'name',
@@ -331,10 +331,15 @@
             'field' => 'nos',
             'label' => 'Number of Students',
             'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'fee',
+            'label' => 'Fee Per Month',
+            'rules' => 'trim|required'
         )
     );
 
-    $edit_class_parameters = array('class_id','name','nos','status');
+    $edit_class_parameters = array('class_id','name','nos','status','fee');
     $edit_class_rule = array(
         array(
             'field' => 'name',
@@ -354,6 +359,11 @@
         array(
             'field' => 'status',
             'label' => 'Status',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'fee',
+            'label' => 'Fee',
             'rules' => 'trim|required'
         )
     );

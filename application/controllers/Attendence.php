@@ -9,8 +9,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 header('Access-Control-Allow-Origin: *');
 Class Attendence extends CI_CONTROLLER {
-    
-   
+
+
      /**
      *  @function   :__construct()
      *  @param      :none
@@ -21,7 +21,7 @@ Class Attendence extends CI_CONTROLLER {
      */
 
 
-    public function __construct() 
+    public function __construct()
     {
 
         parent::__construct();
@@ -30,9 +30,9 @@ Class Attendence extends CI_CONTROLLER {
         $this->load->model('teacher_model', 'tm', true);
         $this->load->model('school_model', 'sm', true);
         $this->load->model('attendence_model', 'am', true);
-        $this->input_arr=include('attendence_variables.php');
-        
-    } 
+        $this->input_arr=include('variables/attendence_variables.php');
+
+    }
 
 
     public function list_holidays(){
@@ -40,11 +40,11 @@ Class Attendence extends CI_CONTROLLER {
         {
             $this->send_response(false, 'Invalid Login');
         }
-        $school_id=$this->session->userdata('school_id'); 
+        $school_id=$this->session->userdata('school_id');
         $where = array('holiday_school_id'=>$school_id);
         $response = $this->am->get_holidays($where);
         $this->send_response(true,"Success",'',$response);
-    }  
+    }
 
     public function add_holidays(){
           if(!$this->session->userdata('school_id'))
@@ -55,7 +55,7 @@ Class Attendence extends CI_CONTROLLER {
 
         $this->validate($this->input_arr['add_holiday_rule'], $this->input_arr['add_holiday_parameters'], true);
         $input = $this->get_input($this->input_arr['add_holiday_parameters']);
-        
+
         $time=time();
         $holiday_data=array(
             'holiday_name' => $input['name'],
@@ -73,7 +73,7 @@ Class Attendence extends CI_CONTROLLER {
             $this->send_response(true,"Success",'',$id);
             }
         else{
-            $this->send_response(false, 'Please_Try_Later');    
+            $this->send_response(false, 'Please_Try_Later');
         }
     }
 
@@ -87,7 +87,7 @@ Class Attendence extends CI_CONTROLLER {
 
         $this->validate($this->input_arr['edit_holiday_rule'], $this->input_arr['edit_holiday_parameters'], true);
         $input = $this->get_input($this->input_arr['edit_holiday_parameters']);
-        
+
         $time=time();
         $holiday_data=array(
             'holiday_name' => $input['name'],
@@ -106,9 +106,9 @@ Class Attendence extends CI_CONTROLLER {
             $this->send_response(true,"Success",'',$id);
             }
         else{
-            $this->send_response(false, 'Please_Try_Later');    
+            $this->send_response(false, 'Please_Try_Later');
         }
-    }  
+    }
 
 
  public function view_holidays(){
@@ -116,26 +116,26 @@ Class Attendence extends CI_CONTROLLER {
         {
             $this->send_response(false, 'Invalid Login');
         }
-        $school_id=$this->session->userdata('school_id'); 
+        $school_id=$this->session->userdata('school_id');
         $holiday_id = $this->input->post('id');
         $where = array('holiday_id'=>$holiday_id);
         $response = $this->am->get_holidays($where);
         $this->send_response(true,"Success",'',$response[0]);
-    }  
-    
+    }
+
 
      public function delete_holidays(){
         if(!$this->session->userdata('school_id'))
         {
             $this->send_response(false, 'Invalid Login');
         }
-        $school_id=$this->session->userdata('school_id'); 
+        $school_id=$this->session->userdata('school_id');
         $holiday_id = $this->input->post('id');
         $where = array('holiday_id'=>$holiday_id);
         $response = $this->am->delete_holidays($where);
         $this->send_response(true,"Success",'',$response[0]);
-    }  
-    
+    }
+
 public function take_attendence(){
     if(!$this->session->userdata('teacher_id'))
         {
@@ -147,7 +147,7 @@ public function take_attendence(){
 
     $this->validate($this->input_arr['take_attendence_rule'], $this->input_arr['take_attendence_parameters'], true);
     $input = $this->get_input($this->input_arr['take_attendence_parameters']);
-        
+
     $class_id = $input['class_id'];
     $absent = $this->input->post('absent');
     $leave = $this->input->post('leave');
@@ -239,25 +239,25 @@ public function get_attendence(){
 
     $this->validate($this->input_arr['get_attendence_rule'], $this->input_arr['get_attendence_parameters'], true);
     $input = $this->get_input($this->input_arr['get_attendence_parameters']);
-    
+
     $class_id = $input['class_id'];
     $month = $input['month'];
     $session = $input['session'];
-    
+
     $arr_of_days_date = $this->get_months_date_days($month,$session);
-    
+
     $student_list_data = $this->tm->get_students($class_id,$school_id);
     for($i = 0;$i<count($student_list_data); $i++){
         $student_list[$i]['index'] = $i;
         $student_list[$i]['id'] = $student_list_data[$i]['id'];
-        $student_list[$i]['name'] = $student_list_data[$i]['name']; 
+        $student_list[$i]['name'] = $student_list_data[$i]['name'];
     }
     $holiday_list = $this->get_holidays_list($school_id, $month, $session,count($arr_of_days_date));
-    
+
     $select = "`status`, `student_id` as id, `date`";
     $where = array('month'=>$month, 'class_id'=>$class_id, 'session'=>$session);
     $attendence_list = $this->am->get_attendence_list($where, $select);
-    
+
     for($i = 0;$i < count($student_list); $i++){
         for($j = 0;$j < count($arr_of_days_date); $j++){
             if($arr_of_days_date[$j]['day'] == 0 )
@@ -282,9 +282,9 @@ public function get_attendence(){
                                 break;
                             }
                         }
-                    }            
+                    }
                 }
-            } 
+            }
         }
     }
     $response['student']=$student_list;
@@ -293,13 +293,83 @@ public function get_attendence(){
     $this->send_response(true,"Success","",$response);
 }
 
+
+
+public function get_student_attendence(){
+    if(!$this->session->userdata('student_id')){
+            $this->send_response(false, 'Invalid Login');
+    }
+
+    $student_id = $this->session->userdata('student_id');
+    $school_id = $this->session->userdata('teacher_school_id');
+
+    $this->validate($this->input_arr['get_student_attendence_rule'], $this->input_arr['get_student_attendence_parameters'], true);
+    $input = $this->get_input($this->input_arr['get_student_attendence_parameters']);
+
+    $month = $input['month'];
+    $session = $input['session'];
+
+    $arr_of_days_date = $this->get_months_date_days($month,$session);
+
+    $holiday_list = $this->get_holidays_list($school_id, $month, $session,count($arr_of_days_date));
+
+    $select = "`status`, `student_id` as id, `date`";
+    $where = array('month'=>$month, 'student_id'=>$student_id, 'session'=>$session);
+    $attendence_list = $this->am->get_attendence_list($where, $select);
+
+        for($j = 0;$j < count($arr_of_days_date); $j++){
+            if($arr_of_days_date[$j]['day'] == 0 )
+                $result[$j+1] = "H";
+            else{
+                if(in_array($arr_of_days_date[$j]['date'], $holiday_list)){
+                    $result[$j+1] = "H";
+                }
+                else{
+                    $result[$j+1] = "P";
+                    for($k = 0;$k < count($attendence_list); $k++){
+                        if($attendence_list[$k]['date']==$arr_of_days_date[$j]['date']){
+                            switch($attendence_list[$k]['status']){
+                                case '1'://absent
+                                $result[$j+1] = "A";
+                                break;
+                                case '2'://leave
+                                $result[$j+1] = "L";
+                                break;
+                                case '3'://expelled
+                                $result[$j+1] = "E";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    $response['dates'] = $arr_of_days_date;
+    $response['data'] = $result;
+    $this->send_response(true,"Success","",$response);
+}
+
 public function get_months_date_days($month,$session){
+    $current_session = date('Y');
+    $current_month = date('m');
+    $current_date = date('d');
     $start_date  = $session."-".$month."-01";
     $month_days = cal_days_in_month(CAL_GREGORIAN,$month,$session);
     $timestamp = strtotime($start_date);
     $day = (int)date('w', $timestamp);
     $j = 1;
-    for($i = 0; $i < $month_days ;$i++,$j++){
+    if($session==$current_session && $month==$current_month){
+        $count_days = $current_date;
+    }
+    else{
+        $count_days = $month_days;
+    }
+    if($session > $current_session || ($session == $current_session && $month>$current_month ) ){
+      $this->send_response(false,"You can not select future date!");
+    }
+
+    for($i = 0; $i < $count_days ;$i++,$j++){
         $result[$i]['day'] = $day%7 ;
         $result[$i]['date'] = $j;
         $day++;
@@ -315,8 +385,8 @@ return $result ;
             $date = $holiday_list[$i]['holiday_start_date'];
             for($j = $holiday_list[$i]['holiday_start_date'];$j<=$month_end_date; $j++){
                 array_push($holiday_dates,$date++);
-            }    
-        }   
+            }
+        }
         return $holiday_dates;
     }
 
@@ -383,16 +453,16 @@ return $result ;
     return $workingDays;
 }
 
-    public function validate($rule, $dataposted, $isset = true) 
+    public function validate($rule, $dataposted, $isset = true)
     {
         $err = array();
         $flag = true;
         //if isset then we check that field is posted or not
-        if ($isset) 
+        if ($isset)
         {
-            foreach ($dataposted as $value) 
+            foreach ($dataposted as $value)
             {
-                if (!isset($_POST[$value]) && $flag) 
+                if (!isset($_POST[$value]) && $flag)
                 {
                     $flag = false;
                     $err[$value] = "You Need to Post " . $value . " field";
@@ -400,7 +470,7 @@ return $result ;
             }
         }
         //true when all things posted
-        if ($flag) 
+        if ($flag)
         {
 
             $this->form_validation->set_rules($rule);
@@ -411,15 +481,15 @@ return $result ;
                 $errors = $this->form_error_formating($dataposted);
                 $this->send_response(false, 'form_errors', $errors);
             }
-        } 
+        }
         else
         {
             $this->send_response(false, 'form_error', $err);
         }
     }
-     
 
-    public function form_error_formating($dataposted) 
+
+    public function form_error_formating($dataposted)
     {
 
         $errorarray = array();
@@ -432,20 +502,20 @@ return $result ;
         }
     }
 
-    public function get_input($inputdata) 
+    public function get_input($inputdata)
     {
-    
+
         $inputs = array();
         //looping throgh input data varriblees
         foreach ($inputdata as $var) {
         //filtering input in required and removed paramteres
                 $inputs[$var] = $this->input->post($var, TRUE);
-            }        
+            }
         return $inputs;
-    }  
+    }
 
 
-    
+
     public function send_response($type,$errormsg,$errors = array(),$data = array()) {
             echo json_encode(array('status' => $type, 'msg' => $errormsg,'errors' => $errors, 'data' => $data));
             exit;

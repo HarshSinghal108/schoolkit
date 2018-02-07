@@ -15,7 +15,7 @@
     );
 
 
-    $add_student_parameters = array('email','password','mobile','name','address','gender','dob','father_name','class_id');
+    $add_student_parameters = array('email','roll_no','password','mobile','name','address','gender','dob','father_name','class_id');
     $add_student_rule = array(
         array(
             'field' => 'name',
@@ -61,11 +61,16 @@
             'field' => 'class_id',
             'label' => 'Class Id',
             'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'roll_no',
+            'label' => 'Roll Number',
+            'rules' => 'trim|required'
         )
     );
 
 
-    $edit_student_parameters = array('student_id','email','password','mobile','name','address','gender','dob','father_name');
+    $edit_student_parameters = array('student_id','roll_no','email','password','mobile','name','address','gender','dob','father_name');
     $edit_student_rule = array(
         array(
             'field' => 'student_id',
@@ -110,6 +115,11 @@
         array(
             'field' => 'father_name',
             'label' => 'Father Name',
+            'rules' => 'trim|required'
+        ),
+        array(
+            'field' => 'roll_no',
+            'label' => 'Roll Number',
             'rules' => 'trim|required'
         )
     );
