@@ -430,7 +430,7 @@ function validate_email($email) {
         $this->validate($this->input_arr['view_class_rule'], $this->input_arr['view_class_parameters'], true);
         $input = $this->get_input($this->input_arr['view_class_parameters']);
         $class_id = $input['class_id'];
-      $select = 'class_id as id,class_name as name,class_number_of_student as nos,class_status as status,class_created_on added_time';
+      $select = 'class_id as id,class_name as name,class_number_of_student as nos,class_status as status,class_created_on added_time, class_fee as fee';
           $where = array('class_id'=>$class_id);
         $data = $this->sm->get_class($where,$select);
         if(sizeof($data) == 0){
