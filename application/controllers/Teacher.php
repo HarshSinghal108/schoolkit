@@ -61,7 +61,14 @@ Class Teacher extends CI_CONTROLLER {
             $this->send_response(true, 'Invalid_Login');
         }
         $teacher_id=$this->session->userdata('teacher_id');
-        $response = $this->tm->get_teacher_class_name($teacher_id);
+        $school_id=$this->session->userdata('teacher_school_id');
+        $class = $this->tm->get_teacher_class_name($teacher_id);
+        $name = $this->tm->get_teacher(array('teacher_id'=>$teacher_id),'teacher_name as name');
+        $school_name = $this->sm->get_school(array('school_id'=>$school_id),'school_name');
+        
+        $response['class'] = $class;
+        $response['name'] = $name[0];
+        $response['school_name'] = $school_name[0];
         $this->send_response(true,'Success','',$response);
     }
 
