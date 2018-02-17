@@ -1363,8 +1363,6 @@ function _setPageSize($format, &$orientation) {
 }
 
 function _getPageFormat($format) {
-		echo $format;
-		die;
 		switch (strtoupper($format)) {
 			case '4A0': {$format = array(4767.87,6740.79); break;}
 			case '2A0': {$format = array(3370.39,4767.87); break;}
