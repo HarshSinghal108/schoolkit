@@ -53,8 +53,10 @@ Class School extends CI_CONTROLLER {
             $this->send_response(false, 'Mobile_2_Already_Exist');
         }
             $time=time();
-            $input['mobile2'] = $input['mobile2'] ? $input['mobile2'] : null;
-            $school_data=array('school_name'=>$input['name'],'school_email'=>$input['email'],'school_password'=>md5($input['password']),'school_mobile1'=>$input['mobile1'],'school_mobile2'=>$input['mobile2'],'school_address'=>$input['address'],'school_landmark'=>$input['landmark'],'school_city'=>$input['city'],'school_state'=>$input['state'],'school_country'=>$input['country'],'school_secret_key'=>$input['secret_key'],'school_referal_admin_id'=>$input['referal_admin_id'],'school_pincode'=>$input['pincode'],'school_created_on'=>$time,'school_updated_on'=>$time);
+            $school_data=array('school_name'=>$input['name'],'school_email'=>$input['email'],'school_password'=>md5($input['password']),'school_mobile1'=>$input['mobile1'],'school_address'=>$input['address'],'school_landmark'=>$input['landmark'],'school_city'=>$input['city'],'school_state'=>$input['state'],'school_country'=>$input['country'],'school_secret_key'=>$input['secret_key'],'school_referal_admin_id'=>$input['referal_admin_id'],'school_pincode'=>$input['pincode'],'school_created_on'=>$time,'school_updated_on'=>$time);
+            if($input['mobile2']){
+                $school_data['school_mobile2'] = $input['mobile2'];
+            }
             $id = $this->sm->insert_school($school_data);
             if($id){
                 $total_charge = $input['nom'] * $input['nos'] * $input['amount'];
